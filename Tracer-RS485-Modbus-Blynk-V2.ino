@@ -31,7 +31,7 @@
 const int defaultBaudRate = 115200;
 int timerTask1, timerTask2, timerTask3;
 float battChargeCurrent, battDischargeCurrent, battOverallCurrent, battChargePower;
-float bvoltage, ctemp, btemp, bremaining, lpower, lcurrent, pvvoltage, pvcurrent, pvpower;
+float bvoltage, ctemp, btemp, bremaining, lpower, lcurrent, pvvoltage, pvcurrent, pvpower, kwhperday;
 float stats_today_pv_volt_min, stats_today_pv_volt_max;
 uint8_t result;
 bool rs485DataReceived = true;
@@ -61,7 +61,8 @@ RegistryList Registries = {
   AddressRegistry_3106,
   AddressRegistry_310D,
   AddressRegistry_311A,
-  AddressRegistry_331B,
+  AddressRegistry_330C,
+  AddressRegistry_331B
 };
 
 // keep log of where we are
@@ -193,6 +194,7 @@ void setup()
     Blynk.virtualWrite(vPIN_BATTERY_CHARGE_POWER,       battChargePower);
     Blynk.virtualWrite(vPIN_BATTERY_OVERALL_CURRENT,    battOverallCurrent);
     Blynk.virtualWrite(vPIN_LOAD_ENABLED,               loadPoweredOn);
+    Blynk.virtualWrite(vPIN_KWH_PER_DAY,                kwhperday);
   }
   
   // exec a function of registry read (cycles between different addresses)
@@ -364,6 +366,19 @@ void setup()
     } else {
       rs485DataReceived = false;
       Serial.println("Read register 0x331B failed!");
+    }
+  }
+
+  void AddressRegistry_330C() {
+    result = node.readInputRegisters(0x330C, 2);
+    
+    if (result == node.ku8MBSuccess) {
+      kwhperday = (node.getResponseBuffer(0x00) | node.getResponseBuffer(0x01) << 16) / 100.0f;
+      Serial.print("Kilo watt hours today: ");
+      Serial.println(kwhperday);
+    } else {
+      rs485DataReceived = false;
+      Serial.println("Read register 0x330C failed!");
     }
   }
 
