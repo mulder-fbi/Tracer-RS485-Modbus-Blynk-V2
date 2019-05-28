@@ -208,7 +208,7 @@ void setup()
 
     delay(10);
     // Set coil at address 0x0006 (Force the load on/off)
-    result = node.writeSingleCoil(0x0006, state);
+    result = node.writeSingleCoil(0x0002, state);
 
     if (result == node.ku8MBSuccess) {
       node.getResponseBuffer(0x00);
