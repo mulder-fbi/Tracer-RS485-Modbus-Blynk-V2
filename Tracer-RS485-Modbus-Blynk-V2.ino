@@ -203,11 +203,11 @@ void setup()
   }
   
   uint8_t setOutputLoadPower(uint8_t state) {
-    Serial.print("Writing coil 0x0006 value to: ");
+    Serial.print("Writing coil 0x0002 value to: ");
     Serial.println(state);
 
     delay(10);
-    // Set coil at address 0x0006 (Force the load on/off)
+    // Set coil at address 0x0002 (Force the load on/off)
     result = node.writeSingleCoil(0x0002, state);
 
     if (result == node.ku8MBSuccess) {
@@ -261,10 +261,10 @@ void setup()
   
   // reads Load Enable Override coil
   uint8_t checkLoadCoilState() {
-    Serial.print("Reading coil 0x0006... ");
+    Serial.print("Reading coil 0x0002... ");
 
     delay(10);
-    result = node.readCoils(0x0006, 1);
+    result = node.readCoils(0x0002, 1);
     
     Serial.print("Result: ");
     Serial.println(result);
@@ -275,7 +275,7 @@ void setup()
       Serial.print(" Value: ");
       Serial.println(loadPoweredOn);
     } else {
-      Serial.println("Failed to read coil 0x0006!");
+      Serial.println("Failed to read coil 0x0002!");
     }
 
     return result;
